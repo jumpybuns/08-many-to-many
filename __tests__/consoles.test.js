@@ -3,6 +3,8 @@ const pool = require('../lib/utils/pool');
 const request = require('supertest');
 const app = require('../lib/app');
 const Console = require('../lib/models/Console');
+const Game = require('../lib/models/Game');
+
 
 describe('console tests yall', () => {
   beforeEach(() => {
@@ -41,6 +43,30 @@ describe('console tests yall', () => {
 
     expect(response.body).toEqual(expect.arrayContaining(consoles));
     expect(response.body).toHaveLength(consoles.length);
+  });
+
+  it('GET a specific console by Id', async() => {
+
+    await Promise.all ([
+      {   title: 'Dynamite Cop',
+        developer: 'Sega AM1' },
+      {   title: 'Space Channel 5',
+        developer: 'United Artists' }
+    ].map(game => Game.insert(game)));
+
+    const console = await Console.insert({
+      name: '3DS',
+      make: 'Nintendo',
+      games: ['Dynamite Cop', 'Space Channel 5']
+
+    });
+    const response = await request(app)
+      .get(`/api/consoles/${console.id}`);
+      
+    expect(response.body).toEqual({
+      ...console,
+      games: ['Dynamite Cop', 'Space Channel 5']
+    });
   });
   
 
