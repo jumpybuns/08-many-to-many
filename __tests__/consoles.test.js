@@ -2,6 +2,7 @@ const fs = require('fs');
 const pool = require('../lib/utils/pool');
 const request = require('supertest');
 const app = require('../lib/app');
+const Console = require('../lib/models/Console');
 
 describe('console tests yall', () => {
   beforeEach(() => {
@@ -12,7 +13,7 @@ describe('console tests yall', () => {
     return pool.end();
   });
 
-  it.only('POST a console to the table', async() => {
+  it('POST a console to the table', async() => {
     const response = await request(app)
       .post('/api/consoles')
       .send({
@@ -26,6 +27,22 @@ describe('console tests yall', () => {
       make: 'Sega'
     });
   });
+
+  it('GET all the consoles from the table', async() => {
+    const consoles = await Promise.all([
+      { name: '3DS',
+        make: 'Nintendo' },
+      { name: 'Dreamcast', 
+        make: 'Sega' }
+    ].map(console => Console.insert(console)));
+
+    const response = await request(app)
+      .get('/api/consoles');
+
+    expect(response.body).toEqual(expect.arrayContaining(consoles));
+    expect(response.body).toHaveLength(consoles.length);
+  });
+  
 
 
 });
