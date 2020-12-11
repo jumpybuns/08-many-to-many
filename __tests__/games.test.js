@@ -3,7 +3,6 @@ const pool = require('../lib/utils/pool');
 const request = require('supertest');
 const app = require('../lib/app');
 const Game = require('../lib/models/Game');
-const Console = require('../lib/models/Console');
 
 
 
@@ -58,5 +57,42 @@ describe('games testing for the masses', () => {
       .get(`/api/games/${game.id}`);
 
     expect(response.body).toEqual(game);
+  });
+
+  it('PUT to update a game', async() => {
+    const game = await Game.insert({
+      title: 'Dynamite Cop',
+      developer: 'Sega AM1'
+    });
+
+    const response = await request(app)
+      .put(`/api/games/${game.id}`)
+      .send({
+        title: 'Dynamite Crap',
+        developer: 'Sega AM1'
+      });
+    
+    expect(response.body).toEqual({
+      id: game.id,
+      title: 'Dynamite Crap',
+      developer: 'Sega AM1'
+    });
+
+  });
+
+  it('DELETE a game from the console table', async() => {
+    const game = await Game.insert({
+      title: 'Space Channel 5',
+      developer: 'United Artists'
+    });
+
+    const response = await request(app)
+      .delete(`/api/games/${game.id}`);
+
+    expect(response.body).toEqual({
+      id: game.id,
+      title: 'Space Channel 5',
+      developer: 'United Artists'
+    });
   });
 });

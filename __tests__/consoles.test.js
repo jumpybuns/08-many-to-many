@@ -72,6 +72,37 @@ describe('console tests yall', () => {
       games: ['Dynamite Cop', 'Space Channel 5']
     });
   });
+
+  it('PUT a console into the table and updates it', async() => {
+    const console = await Console.insert({
+      name: '3DS',
+      make: 'Nintendo'
+    });
+    const response = await request(app)
+      .put(`/api/consoles/${console.id}`)
+      .send({
+        name: '3DS',
+        make: 'Nintega'
+      });
+
+    expect(response.body).toEqual({
+      id: console.id,
+      name: '3DS',
+      make: 'Nintega'
+    });
+  });
+
+  it('DELETE a console from the table', async() => {
+    const console = await Console.insert({
+      name: 'Dreamcast',
+      make: 'Sega'
+    });
+
+    const response = await request(app)
+      .delete(`/api/consoles/${console.id}`);
+    
+    expect(response.body).toEqual(console);
+  });
   
 
 
