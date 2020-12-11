@@ -48,10 +48,14 @@ describe('console tests yall', () => {
   it('GET a specific console by Id', async() => {
 
     await Promise.all ([
-      {   title: 'Dynamite Cop',
-        developer: 'Sega AM1' },
-      {   title: 'Space Channel 5',
-        developer: 'United Artists' }
+      {   
+        title: 'Dynamite Cop',
+        developer: 'Sega AM1' 
+      },
+      {   
+        title: 'Space Channel 5',
+        developer: 'United Artists' 
+      }
     ].map(game => Game.insert(game)));
 
     const console = await Console.insert({

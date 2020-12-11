@@ -3,6 +3,7 @@ const pool = require('../lib/utils/pool');
 const request = require('supertest');
 const app = require('../lib/app');
 const Game = require('../lib/models/Game');
+const Console = require('../lib/models/Console');
 
 
 
@@ -44,5 +45,18 @@ describe('games testing for the masses', () => {
 
     expect(response.body).toEqual(expect.arrayContaining(games));
     expect(response.body).toHaveLength(games.length);
+  });
+
+  it('GET a specific game by id', async() => {
+
+    const game = await Game.insert({
+      title: 'Dynamite Cop',
+      developer: 'Sega AM1'
+      
+    });
+    const response = await request(app)
+      .get(`/api/games/${game.id}`);
+
+    expect(response.body).toEqual(game);
   });
 });
