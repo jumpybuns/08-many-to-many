@@ -61,7 +61,7 @@ describe('console tests yall', () => {
     const console = await Console.insert({
       name: '3DS',
       make: 'Nintendo',
-      games: ['Dynamite Cop', 'Space Channel 5']
+      games: ['Space Channel 5']
 
     });
     const response = await request(app)
@@ -69,7 +69,7 @@ describe('console tests yall', () => {
       
     expect(response.body).toEqual({
       ...console,
-      games: ['Dynamite Cop', 'Space Channel 5']
+      games: ['Space Channel 5']
     });
   });
 
